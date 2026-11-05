@@ -1,0 +1,4 @@
+# Folder unggahan hanya untuk gambar: jangan pernah menjalankan skrip di sini.
+<FilesMatch "\.(php\d?|phtml|phar|pl|py|cgi|sh)$">
+    Require all denied
+</FilesMatch>

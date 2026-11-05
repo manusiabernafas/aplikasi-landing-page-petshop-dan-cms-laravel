@@ -1,0 +1,54 @@
+Deskripsi
+Source code aplikasi manajemen petshop lengkap berbasis Laravel 12 dan MySQL untuk petshop, salon grooming, pet hotel, maupun klinik hewan kecil. Ada website publik yang menarik: landing page dengan ilustrasi kucing dan anjing, daftar layanan dan harga, produk unggulan, serta form booking online dengan pilihan slot jam grooming dan tanggal titip-jemput pet hotel. Pelanggan mendapat kode booking dan bisa melacak statusnya tanpa membuat akun.
+
+Di panel toko, kasir melayani penjualan produk dan layanan dalam satu layar POS dengan pencarian, keranjang, diskon, tunai/QRIS/transfer, kembalian otomatis, dan struk 58 mm. Stok berkurang otomatis dan setiap perubahan tercatat. Groomer melihat jadwal per jam dan denah kandang, pemilik mencatat pelanggan, kartu hewan, riwayat vaksin, serta mengingatkan jadwal vaksin lewat WhatsApp. Laporan menampilkan omzet, laba kotor, produk dan layanan terlaris, serta ekspor CSV.
+Cara kerja
+Data tersimpan di MySQL: pelanggan, hewan, vaksin, produk, mutasi stok, layanan, booking, transaksi, dan item transaksi. Booking grooming dan klinik memakai slot jam yang diatur di pengaturan dengan kapasitas per jam per kategori; booking pet hotel memilih tanggal titip dan jemput lalu mendapat nomor kandang kosong otomatis. Pengecekan kuota dan kandang dilakukan di server di dalam transaksi database dengan baris layanan dikunci, sehingga slot terakhir tidak bisa terisi dua kali.
+
+Di kasir, browser hanya mengirim id dan jumlah. Server mengunci baris produk (lockForUpdate), menghitung ulang harga dari database, menolak stok kurang dan uang tunai kurang, lalu mencatat transaksi, item, dan mutasi stok sekaligus. Booking yang ditagih di kasir otomatis berstatus selesai dan lunas; pembatalan transaksi oleh admin mengembalikan stok dan membuka tagihan booking lagi. Stok masuk, keluar, dan stok opname juga tercatat lengkap dengan siapa dan kapan.
+
+Ada tiga peran: admin (semua menu), kasir (kasir, transaksi, produk, booking, pelanggan), dan groomer (jadwal dan kartu hewan). Keamanan memakai CSRF, password hash, batas percobaan masuk, rate limit booking per fitur, honeypot, validasi unggahan gambar dengan folder uploads yang tidak bisa menjalankan skrip, header keamanan, dan ekspor CSV yang aman dari formula injection.
+Fitur
+Landing page petshop: hero ilustrasi, layanan per kategori, produk unggulan, cara booking, lokasi & jam buka
+Booking online tanpa akun dengan slot jam real-time dan kuota per jam
+Booking pet hotel: tanggal titip-jemput, cek kandang kosong, nomor kandang otomatis
+Perkiraan biaya langsung di form booking, kode booking + cek status publik
+Kasir POS: cari produk/SKU, tab kategori, keranjang, diskon, tunai/QRIS/transfer
+Tombol uang pas dan kembalian otomatis, struk 58 mm siap cetak
+Tagih booking di kasir: layanan & jumlah malam terisi otomatis, booking jadi lunas
+Stok berkurang otomatis dengan penguncian baris, tidak bisa minus
+Stok masuk, keluar, dan stok opname dengan riwayat mutasi lengkap
+Peringatan stok menipis dan nilai stok berdasarkan harga beli
+Jadwal grooming & klinik per jam dan denah kandang pet hotel per tanggal
+Alur status booking: menunggu, dikonfirmasi, dikerjakan, selesai, batal + kabari via WA
+Data pelanggan & kartu hewan: jenis, ras, umur, berat, catatan alergi
+Rekam vaksin + daftar vaksin jatuh tempo dengan tombol pengingat WhatsApp
+Dasbor: omzet hari ini, grafik 14 hari, jadwal hari ini, pet hotel, produk terlaris
+Laporan periode: omzet, laba kotor, metode bayar, produk & layanan terlaris, ekspor CSV
+Tiga peran staf: admin, kasir, groomer + reset kata sandi
+Pengaturan toko: logo, WhatsApp, jam buka, slot jam, kapasitas, jumlah kandang
+Data contoh realistis: 38 pelanggan, 48 hewan, 36 produk, 700+ transaksi, 200+ booking
+Responsif penuh dari HP sampai desktop, jalan di XAMPP tanpa mengetik /public
+Keamanan: CSRF, rate limit, honeypot, validasi unggahan, CSV aman formula injection
+Panduan instalasi
+Kebutuhan: PHP 8.2+ (XAMPP/Laragon), MySQL/MariaDB, Composer.
+
+Ekstrak ZIP ke C:\xampp\htdocs\petshop (Windows) atau folder web server kamu.
+
+Nyalakan Apache dan MySQL di XAMPP Control Panel.
+
+Jalankan setup.bat (Windows) atau bash setup.sh (Linux/macOS). Skrip ini memasang dependency Composer, membuat file .env, membuat database petshop beserta tabel dan data contoh.
+
+Bila MySQL kamu memakai password, buka .env lalu isi DB_PASSWORD sebelum menjalankan setup.
+Buka http://localhost/petshop untuk website publik.
+
+Masuk panel di http://localhost/petshop/masuk:
+
+Admin: admin@petshop.test / admin123
+Kasir: kasir@petshop.test / kasir123
+Groomer: groomer@petshop.test / groomer123
+Buka Pengaturan untuk mengganti nama toko, logo, nomor WhatsApp, jam buka, slot jam grooming, dan jumlah kandang. Ganti semua kata sandi lewat menu Ganti kata sandi.
+
+Untuk hosting, arahkan document root ke folder public/, set APP_ENV=production, APP_DEBUG=false, dan APP_URL sesuai domain.
+
+Alternatif tanpa XAMPP: php artisan serve lalu buka http://127.0.0.1:8000.
